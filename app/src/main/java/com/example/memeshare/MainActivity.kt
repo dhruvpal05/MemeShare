@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    var currentImgUrl: String? = null
+    private var currentImgUrl: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
@@ -38,14 +38,14 @@ class MainActivity : AppCompatActivity() {
         loadmeme()
     }
 
-     private fun loadmeme(){
+      fun loadmeme(){
         // Instantiate the RequestQueue.
         val queue = Volley.newRequestQueue(this)
         val url = "https://meme-api.com/gimme"
 
         val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
-                val currentImgUrl = response.getString("url")
+                this.currentImgUrl = response.getString("url")
                 Glide.with(this).load(currentImgUrl).into(binding.imageView)
             },
             { error ->
@@ -95,6 +95,16 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(Intent.EXTRA_TEXT,"HEY, checkout this funny meme! $currentImgUrl")
         val chooser = Intent.createChooser(intent,"share this using...")
         startActivity(chooser)
+
+//        val shareIntent = Intent(Intent.ACTION_SEND)
+//        shareIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//        shareIntent.putExtra(Intent.EXTRA_STREAM, currentImgUrl)
+//        shareIntent.type = "text/plain"
+//        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//        shareIntent.putExtra(Intent.EXTRA_TEXT,"checkout this funny meme! $currentImgUrl")
+////        shareIntent.putExtra(Intent.EXTRA_TEXT, currentImgUrl)
+//        // Open the chooser dialog box
+//        startActivity(Intent.createChooser(shareIntent, "Share with"))
     }
     fun Nextclick(view: View) {
         loadmeme()
